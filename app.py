@@ -1,0 +1,22 @@
+from flask import Flask,render_template,request
+import pickle
+
+app = Flask(__name__)
+
+@app.route('/')
+def hello():
+    return render_template('index.html')
+
+@app.route('/Prediction',methods=['GET','POST'])
+def predict():
+    if request.method == 'POST':
+        Height = request.form['Height']
+        print(Height)
+        model=pickle.load(open('model.pkl','rb'))
+        weight=model.predict([[float(Height)]])
+        print(weight[0])
+
+    return render_template('prediction.html',weight=weight[0])
+
+if __name__=='__main__':
+    app.run()
